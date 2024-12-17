@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
 import connectDb from './connectDb';
 import router from './router';
@@ -8,13 +9,15 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
 
-// body-parser
-// app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
-// app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.cloud_api_key,
+  api_secret: process.env.cloud_api_secret,
+});
 
 // Routes
 app.get('/', (req: Request, res: Response) => {

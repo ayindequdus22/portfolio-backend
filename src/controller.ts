@@ -1,10 +1,20 @@
 import { Request, Response } from "express";
+import { v2 as cloudinary } from "cloudinary";
 import { client } from "./connectDb";
 
 const addProject = async (req: Request, res: Response) => {
     const { image, details, title, link, video } = req.body;
-    const value = [image, details, title, link, video];
+    if (!image || !video) {
+        res.status(400).json({ message: "Image and video must be sent" })
+    }
     try {
+
+        const uploadedImg = await cloudinary.uploader
+            .upload(image);
+        const uploadedVideo = await cloudinary.uploader
+            .upload(video);
+        const value = [uploadedImg.url, details, title, link, uploadedVideo.url];
+
         const projectExists = await client.query(`Select link from projects WHERE link = $1`, [link]);
         if (projectExists.rows.length) {
             res.status(400).json("Project exists");
