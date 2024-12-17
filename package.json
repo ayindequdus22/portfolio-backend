@@ -16,7 +16,6 @@
     "express": "^5.0.1",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
-    "pg-promise": "^11.10.2",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {

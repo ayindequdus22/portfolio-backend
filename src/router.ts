@@ -1,6 +1,6 @@
-// import express, { Response ,Request}  from "express"
-// export const router = express.Router();
-// router.get("projects",async(req:Request,res:Response)=>{
-// res.json("HEllo");
-// });
- 
+import { Router, Request, Response } from "express";
+import { addProject, getProjects } from "./controller";
+const router = Router();
+router.get("/",getProjects);  
+router.post("/add-projects",addProject);
+export default router;
