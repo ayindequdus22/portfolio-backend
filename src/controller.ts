@@ -15,12 +15,11 @@ const addProject = async (req: Request, res: Response) => {
             .upload(video);
         const value = [uploadedImg.url, details, title, link, uploadedVideo.url];
 
-        const projectExists = await client.query(`Select link from projects WHERE link = $1`, [link]);
+        const projectExists = await client.query(`Select id from projects WHERE id = $1`, [link]);
         if (projectExists.rows.length) {
             res.status(400).json("Project exists");
         }
-        await client.query(`INSERT INTO projects (image, details, title, link, video) 
-    VALUES ($1, $2, $3, $4, $5)
+        await client.query(`Insert into projects(name,title,image,video,lDescription,bDescription) values  ($1, $2, $3, $4, $5, $6)
 `, value);
         res.status(201).json("Project has been added");
     } catch (error) {
@@ -38,7 +37,15 @@ const getProjects = async (req: Request, res: Response) => {
     }
 };
 const deleteProject = async (req: Request, res: Response) => {
+    const { id } = req.body;
+    try {
+        await client.query("delete from projects where id = $1", [id]);
+        res.status(200).json(`${id} has been deleted`);
 
+    } catch (error) {
+        console.error("Error deleting project", error);
+        res.status(500).json({ message: "Error deleting project" });
+    }
 }
 
 export { addProject, getProjects, deleteProject }

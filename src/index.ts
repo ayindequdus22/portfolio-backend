@@ -1,11 +1,11 @@
-import express, { Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
 import connectDb from './connectDb';
 import router from './router';
 
 // Initialize the Express app
-const app = express();
+const app:Application = express();
 
 // Middlewares
 app.use(express.json());
