@@ -1,18 +1,39 @@
 import express, { Application, Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
+import cors, { CorsOptions } from "cors";
 import "dotenv/config";
 import connectDb from './connectDb';
 import router from './router';
 
 // Initialize the Express app
-const app:Application = express();
+const app: Application = express();
 
 // Middlewares
-app.use(express.json());
+
+app.use(express.json({limit:"200kb",})); //parse req body to js object
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
+
+// cors
+const allowedOrigins: string[] = (process.env.ALLOWED_ORIGINS || "").split(",").map(origin => origin.trim().replace(/\/$/, "")).filter(origin => origin !== "");
+console.log(allowedOrigins)
+const corsOptions: CorsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      // (origin.startsWith('https://') && //likkle 
+      // allow the req
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: 'GET,POST,DELETE',
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
-
+ 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
   api_key: process.env.cloud_api_key,
@@ -35,9 +56,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Something broke!')
-});
-
-
+})
 
 // Start the server
 app.listen(process.env.PORT, () => {

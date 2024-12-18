@@ -29,15 +29,16 @@ const addProject = async (req: Request, res: Response) => {
 };
 const getProjects = async (req: Request, res: Response) => {
     try {
+        console.log(req)
         const result = await client.query("Select * from projects");
-        res.status(200).json(result.rows);
+        res.status(200).json([result.rows,req.ip]);
     } catch (error) {
         console.error("DBERR", error);
         res.status(500).json({ message: "Projects doesn't exist" });
     }
 };
 const deleteProject = async (req: Request, res: Response) => {
-    const { id } = req.body;
+    const id = req.params.id;
     try {
         await client.query("delete from projects where id = $1", [id]);
         res.status(200).json(`${id} has been deleted`);
@@ -46,6 +47,10 @@ const deleteProject = async (req: Request, res: Response) => {
         console.error("Error deleting project", error);
         res.status(500).json({ message: "Error deleting project" });
     }
-}
+};
+const updateProject = async (req: Request, res: Response) => {
 
-export { addProject, getProjects, deleteProject }
+};
+
+
+export { addProject, getProjects, deleteProject, updateProject }
