@@ -4,8 +4,9 @@ import cors, { CorsOptions } from "cors";
 import helmet from 'helmet';
 import "dotenv/config";
 import connectDb from './connectDb';
-import router from './router';
 import logger from './utils/logger';
+import adminRouter from "./admin";
+import projectRouter from "./router"
 
 // Initialize the Express app
 const app: Application = express();
@@ -36,7 +37,7 @@ app.use(helmet());
 
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
-
+// req.protocol  req.secure
 
 
 console.log(process.env.NODE_ENV);
@@ -52,7 +53,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 
-app.use("/v1/projects", router);
+app.use("/v1/projects",projectRouter);
+app.use("/v1/admin",adminRouter);
 // custom 404 i.e for routes that do not exist
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!")

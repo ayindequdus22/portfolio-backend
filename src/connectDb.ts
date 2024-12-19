@@ -6,7 +6,7 @@ export const client = new Client({
     host: "localhost",
     user: "postgres",
     port: 5432,
-    database: "portfoliB",
+    database: "portfolioDB",
     password: process.env.DBPassword
 });
 const connectDb = async () => {

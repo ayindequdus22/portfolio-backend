@@ -3,6 +3,29 @@ import { v2 as cloudinary } from "cloudinary";
 import { client } from "./connectDb";
 import logger from "./utils/logger";
 
+const getProjects = async (req: Request, res: Response) => {
+    try {
+        const result = await client.query("Select id,title,image,lDescription from projects");
+        res.status(200).json(result.rows,);
+    } catch (error) {
+        logger.error("DBERR", error);
+        res.status(500).json({ message: "Projects doesn't exist" });
+    }
+};
+
+const getSpecificProject = async (req: Request, res: Response) => {
+    const id: string = req.params.id;
+    try {
+        const result = await client.query("Select * from projects where id = $1", [id]);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        logger.error("DBERR", error);
+        res.status(500).json({ message: "Projects doesn't exist" });
+    }
+
+};
+
 const addProject = async (req: Request, res: Response) => {
     const { image, details, title, link, video } = req.body;
     if (!image || !video) {
@@ -24,20 +47,11 @@ const addProject = async (req: Request, res: Response) => {
 `, value);
         res.status(201).json("Project has been added");
     } catch (error) {
-        console.error("Error adding project:", error);
+        logger.error("Error adding project:", error);
         res.status(500).json({ message: "Unable to add project at this time" });
     }
 };
-const getProjects = async (req: Request, res: Response) => {
-    try {
 
-        const result = await client.query("Select * from projects");
-        res.status(200).json([result.rows, req.ip]);
-    } catch (error) {
-        console.error("DBERR", error);
-        res.status(500).json({ message: "Projects doesn't exist" });
-    }
-};
 const deleteProject = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
@@ -45,13 +59,19 @@ const deleteProject = async (req: Request, res: Response) => {
         res.status(200).json(`${id} has been deleted`);
 
     } catch (error) {
-        console.error("Error deleting project", error);
+        logger.error("Error deleting project", error);
         res.status(500).json({ message: "Error deleting project" });
     }
 };
+
 const updateProject = async (req: Request, res: Response) => {
 
 };
+const login = async (req: Request, res: Response) => {
 
+};
+const register = async (req: Request, res: Response) => {
 
-export { addProject, getProjects, deleteProject, updateProject }
+};
+
+export { addProject, getProjects, deleteProject, updateProject, login, register, getSpecificProject }
