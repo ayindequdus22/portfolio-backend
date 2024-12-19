@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { client } from "./connectDb";
+import logger from "./utils/logger";
 
 const addProject = async (req: Request, res: Response) => {
     const { image, details, title, link, video } = req.body;
@@ -29,9 +30,9 @@ const addProject = async (req: Request, res: Response) => {
 };
 const getProjects = async (req: Request, res: Response) => {
     try {
-        console.log(req)
+
         const result = await client.query("Select * from projects");
-        res.status(200).json([result.rows,req.ip]);
+        res.status(200).json([result.rows, req.ip]);
     } catch (error) {
         console.error("DBERR", error);
         res.status(500).json({ message: "Projects doesn't exist" });
