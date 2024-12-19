@@ -7,7 +7,7 @@ import connectDb from './connectDb';
 import logger from './utils/logger';
 import adminRouter from "./admin";
 import projectRouter from "./router"
-
+import strategy from "./strategy"
 // Initialize the Express app
 const app: Application = express();
 
@@ -33,6 +33,8 @@ const corsOptions: CorsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(helmet());
+app.use(strategy.initialize());
+app.use(strategy.session());
 // cors
 
 // // to prevent attackers from knowing the type of technology user

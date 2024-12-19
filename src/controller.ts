@@ -1,8 +1,17 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { client } from "./connectDb";
 import logger from "./utils/logger";
-
+import passport from "passport";
+import Joi from "joi";
+const validateLoginSchema = Joi.object({
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+        .min(3)
+        .max(30)
+        .required(),
+    password: Joi.string().min(6).max(30)
+    // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+})
 const getProjects = async (req: Request, res: Response) => {
     try {
         const result = await client.query("Select id,title,image,lDescription from projects");
@@ -67,8 +76,40 @@ const deleteProject = async (req: Request, res: Response) => {
 const updateProject = async (req: Request, res: Response) => {
 
 };
-const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email, password } = req.body;
 
+        // Check if email or password is missing
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required.' });
+        }
+
+        const { value, error } = validateLoginSchema.validate(req.body);
+        if (error) {
+            console.log(value, error);
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
+        passport.authenticate('local', async (err, user, info) => {
+            if (err) {
+                return res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
+            }
+            if (!user) {
+                return res.status(400).json({ message: info.message });
+            }
+            req.logIn(user, async (err) => {
+                if (err) {
+                    return res.status(500).json({ message: 'An error occurred during login.', error: err.message });
+                }
+                // await sendLoginEmail(user.email);
+                return res.status(200).json({ message: 'Login successful' });
+            });
+        })(req, res, next);
+
+    } catch (error) {
+        console.log(error)
+    }
 };
 const register = async (req: Request, res: Response) => {
 

@@ -43,5 +43,5 @@ passport.deserializeUser(async (id: number, done) => {
     } catch (err) {
         done(err, null);
     }
-})
-// C:\Users\abdul\Documents\portfolio\portfolio-backend\node_modules\passport-local\lib\strategy.js
+});
+export default passport;
