@@ -47,7 +47,7 @@ app.use(session({
     secure: true,
     sameSite: 'strict',
   },
-  store: new pgSession({pool:client})
+  store: new pgSession({ pool: client })
 }));
 
 app.use(strategy.initialize());
@@ -56,9 +56,16 @@ const csrfProtection = csrf({ cookie: true });
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
 // req.protocol  req.secure
+app.use((req, res, next) => {
+  // Check if the protocol is not HTTPS
+  if (req.protocol !== "https") {
+    // Redirect to HTTPS version of the same URL
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
 
 
-console.log(process.env.NODE_ENV);
 cloudinary.config({
   cloud_name: process.env.cloud_name,
   api_key: process.env.cloud_api_key,
@@ -71,7 +78,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 
-app.use("/api/v1/projects",projectRouter);
+app.use("/api/v1/projects", projectRouter);
 app.use("/api/v1/admin", adminRouter);
 // custom 404 i.e for routes that do not exist
 app.use((req, res, next) => {
@@ -89,5 +96,3 @@ app.listen(process.env.PORT, () => {
   connectDb();
   logger.debug(`Server is running on http://localhost:${process.env.PORT}`);
 });
-
-

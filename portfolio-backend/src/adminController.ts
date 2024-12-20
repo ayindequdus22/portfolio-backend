@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { client } from "./utils/connectDb";
 import logger from "./utils/logger";
-import bcrypt from "bcryptjs";
 import passport from "passport";
 import Joi from "joi";
 const validateLoginSchema = Joi.object({
@@ -16,7 +15,7 @@ const validateLoginSchema = Joi.object({
 })
 
 const addProject = async (req: Request, res: Response) => {
-    const { image, details, title, link, video } = req.body;
+    const { image, details, title, link, video,category } = req.body;
     if (!image || !video) {
         res.status(400).json({ message: "Image and video must be sent" })
     }
@@ -32,7 +31,7 @@ const addProject = async (req: Request, res: Response) => {
         if (projectExists.rows.length) {
             res.status(400).json("Project exists");
         }
-        await client.query(`Insert into projects(name,title,image,video,lDescription,bDescription) values  ($1, $2, $3, $4, $5, $6)
+        await client.query(`Insert into projects(name,title,image,video,lDescription,bDescription,category) values  ($1, $2, $3, $4, $5, $6,$7)
 `, value);
         res.status(201).json("Project has been added");
     } catch (error) {
