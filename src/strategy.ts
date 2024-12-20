@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import bcrypt from "bcryptjs"
-import { client } from "./connectDb";
+import bcrypt from "bcryptjs";
+import { client } from "./utils/connectDb";
 import logger from "./utils/logger";
 
 

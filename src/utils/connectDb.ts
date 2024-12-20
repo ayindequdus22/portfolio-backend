@@ -1,8 +1,8 @@
 import "dotenv/config";
-import pkg from "pg";
-import logger from "./utils/logger";
-const { Client } = pkg;
-export const client = new Client({
+import pg from "pg";
+import logger from "./logger";
+const { Pool } = pg;
+export const client = new Pool({
     host: "localhost",
     user: "postgres",
     port: 5432,

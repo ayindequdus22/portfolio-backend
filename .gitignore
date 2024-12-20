@@ -10,7 +10,7 @@
 
 # production
 /build
-
+/createAdmin.ts
 # misc
 .DS_Store
 .env.local

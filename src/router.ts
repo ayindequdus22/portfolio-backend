@@ -1,5 +1,5 @@
-import { Router, Request, Response } from "express";
-import { addProject, deleteProject, getProjects, getSpecificProject, updateProject } from "./controller";
+import { Router } from "express";
+import { getProjects, getSpecificProject } from "./controller";
 const router = Router();
 router.get("/", getProjects);
 router.get("/:id", getSpecificProject);
