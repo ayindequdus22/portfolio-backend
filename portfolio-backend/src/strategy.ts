@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(
 
     }));
 passport.serializeUser((user, done) => {
-    done(null, user.id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
+    done(null, (user as { id: number }).id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
 });
 passport.deserializeUser(async (id: number, done) => {
     try {

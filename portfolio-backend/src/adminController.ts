@@ -61,28 +61,28 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
         // Check if email or password is missing
         if (!email || !password || !username || !role) {
-            return res.status(400).json({ message: 'Email and password are required.' });
+             res.status(400).json({ message: 'Email and password are required.' });
         }
 
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
-            console.log(value, error);
-            return res.status(400).json({ error: error.details[0].message });
+            logger.debug(value, error);
+             res.status(400).json({ error: error.details[0].message });
         }
 
         passport.authenticate('local', async (err, user, info) => {
             if (err) {
-                return res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
+                 res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
             }
             if (!user) {
-                return res.status(400).json({ message: info.message });
+                 res.status(400).json({ message: info.message });
             }
             req.logIn(user, async (err) => {
                 if (err) {
-                    return res.status(500).json({ message: 'An error occurred during login.', error: err.message });
+                     res.status(500).json({ message: 'An error occurred during login.', error: err.message });
                 }
                 // await sendLoginEmail(user.email);
-                return res.status(200).json({ message: 'Login successful' });
+                 res.status(200).json({ message: 'Login successful' });
             });
         })(req, res, next);
 
