@@ -1,7 +1,7 @@
 import express,{ Router } from "express";
 import { addProject, deleteProject, login, updateProject } from "./adminController";
 
-const admin:Router = express.Router();
+const admin = express.Router();
 admin.post("/login",login);
 admin.post("/add-project",addProject);
 admin.delete("/delete-project",deleteProject);
