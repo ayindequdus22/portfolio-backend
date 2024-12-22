@@ -9,7 +9,7 @@ passport.use(new LocalStrategy(
     // options
     { usernameField: 'email', passwordField: 'password' },
     // verify fn
-    async function verify(email: string, password: string, done: any) {
+    async (email, password, done) => {
         try {
             const result = await client.query("Select * from users where email=$1", [email],);
             if (result.rows.length === 0) {
@@ -30,9 +30,9 @@ passport.use(new LocalStrategy(
 
     }));
 passport.serializeUser((user, done) => {
-    done(null, (user as { id: number }).id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
+    done(null,user.id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
 });
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id, done) => {
     try {
         const result = await client.query("Select * from users where id=$1", [id],);
         if (result.rows.length === 0) {

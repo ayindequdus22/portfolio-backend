@@ -56,14 +56,14 @@ const csrfProtection = csrf({ cookie: true });
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
 // req.protocol  req.secure
-app.use((req, res, next) => {
-  // Check if the protocol is not HTTPS
-  if (req.protocol !== "https") {
-    // Redirect to HTTPS version of the same URL
-    return res.redirect(301, `https://${req.headers.host}${req.url}`);
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   // Check if the protocol is not HTTPS
+//   if (req.protocol !== "https") {
+//     // Redirect to HTTPS version of the same URL
+//     return res.redirect(301, `https://${req.headers.host}${req.url}`);
+//   }
+//   next();
+// });
 
 
 cloudinary.config({

@@ -59,35 +59,46 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { username, email, password, role } = req.body;
 
-        // Check if email or password is missing
+        // Check if email, password, username, or role is missing
         if (!email || !password || !username || !role) {
-             res.status(400).json({ message: 'Email and password are required.' });
+            return res.status(400).json({ message: 'All fields are required.' });
         }
 
+        // Validate request body
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
             logger.debug(value, error);
-             res.status(400).json({ error: error.details[0].message });
+            return res.status(400).json({ error: error.details[0].message });
         }
 
+        // Authenticate user
         passport.authenticate('local', async (err, user, info) => {
             if (err) {
-                 res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
+                logger.error('Authentication error:', err);
+                return res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
             }
+
             if (!user) {
-                 res.status(400).json({ message: info.message });
+                // If no user is found, respond with the error message from Passport
+                return res.status(400).json({ message: info?.message || 'Authentication failed.' });
             }
+
+            // Log in the user
             req.logIn(user, async (err) => {
                 if (err) {
-                     res.status(500).json({ message: 'An error occurred during login.', error: err.message });
+                    logger.error('Login error:', err);
+                    return res.status(500).json({ message: 'An error occurred during login.', error: err.message });
                 }
-                // await sendLoginEmail(user.email);
-                 res.status(200).json({ message: 'Login successful' });
+
+                // Successful login
+                return res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
             });
         })(req, res, next);
 
     } catch (error) {
-        console.log(error)
+        logger.error('Unexpected error in login:', error);
+        return res.status(500).json({ message: 'An unexpected error occurred.', error: error.message });
     }
 };
+
 export {login,updateProject,deleteProject,addProject }
