@@ -87,7 +87,7 @@ app.use((req, res, next) => {
 
 // custom error handler
 app.use((err, req, res, next) => {
-  logger.error(err.stack)
+  console.error(err.stack)
   res.status(500).send('Something broke!')
 })
 
@@ -98,10 +98,10 @@ const startServer = async () => {
   try {
     await connectDb(); // Ensure DB is connected before starting server
     app.listen(process.env.PORT, () => {
-      logger.info(`Server is running on http://localhost:${process.env.PORT}`);
+      console.info(`Server is running on http://localhost:${process.env.PORT}`);
     });
   } catch (error) {
-    logger.error("Failed to start server:", error.message);
+    console.error("Failed to start server:", error.message);
   }
 
 }

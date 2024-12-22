@@ -13,10 +13,10 @@ export const client = new Pool({
 const connectDb = async () => {
     try {
         await client.connect();
-        logger.info("Database connected successfully!");
+        console.info("Database connected successfully!");
 
     } catch (error) {
-        logger.error("Database connection failed:", error);
+        console.error("Database connection failed:", error);
         process.exit(1); // Exit the application if the connection fails
     }
 

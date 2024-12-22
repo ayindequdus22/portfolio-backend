@@ -35,7 +35,7 @@ const addProject = async (req: Request, res: Response) => {
 `, value);
         res.status(201).json("Project has been added");
     } catch (error) {
-        logger.error("Error adding project:", error);
+        console.error("Error adding project:", error);
         res.status(500).json({ message: "Unable to add project at this time" });
     }
 };
@@ -47,7 +47,7 @@ const deleteProject = async (req: Request, res: Response) => {
         res.status(200).json(`${id} has been deleted`);
 
     } catch (error) {
-        logger.error("Error deleting project", error);
+        console.error("Error deleting project", error);
         res.status(500).json({ message: "Error deleting project" });
     }
 };
@@ -67,14 +67,14 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         // Validate request body
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
-            logger.info(value, error);
+            console.info(value, error);
             return res.status(400).json({ error: error.details[0].message });
         }
 
         // Authenticate user
         passport.authenticate('local', async (err, user, info) => {
             if (err) {
-                logger.error('Authentication error:', err);
+                console.error('Authentication error:', err);
                 return res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
             }
 
@@ -86,7 +86,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             // Log in the user
             req.logIn(user, async (err) => {
                 if (err) {
-                    logger.error('Login error:', err);
+                    console.error('Login error:', err);
                     return res.status(500).json({ message: 'An error occurred during login.', error: err.message });
                 }
 
@@ -96,7 +96,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         })(req, res, next);
 
     } catch (error) {
-        logger.error('Unexpected error in login:', error);
+        console.error('Unexpected error in login:', error);
         return res.status(500).json({ message: 'An unexpected error occurred.', error: error.message });
     }
 };
