@@ -96,12 +96,12 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
-      await connectDb(); // Ensure DB is connected before starting server
-      app.listen(process.env.PORT, () => {
-        logger.debug(`Server is running on http://localhost:${process.env.PORT}`);
-      });
+    await connectDb(); // Ensure DB is connected before starting server
+    app.listen(process.env.PORT, () => {
+      logger.info(`Server is running on http://localhost:${process.env.PORT}`);
+    });
   } catch (error) {
-      logger.error("Failed to start server:", error.message);
+    logger.error("Failed to start server:", error.message);
   }
 
 }

@@ -8,12 +8,12 @@ export const client = new Pool({
     // port:  `${process.env.port}`,
     // database: process.env.database,
     // password: process.env.DBPassword
-    connectionString:process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL
 });
 const connectDb = async () => {
     try {
         await client.connect();
-        logger.debug("Database connected successfully!");
+        logger.info("Database connected successfully!");
 
     } catch (error) {
         logger.error("Database connection failed:", error);

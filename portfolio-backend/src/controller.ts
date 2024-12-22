@@ -7,7 +7,7 @@ const getProjects = async (req: Request, res: Response) => {
         const result = await client.query("Select id,title,image,lDescription,category from projects");
         res.status(200).json(result.rows);
     } catch (error) {
-        logger.error("DBERR", error);
+        logger.error(error);
         res.status(500).json({ message: "Projects doesn't exist" });
     }
 };

@@ -16,7 +16,7 @@ passport.use(new LocalStrategy(
                 return done(null, false, { message: 'Incorrect username or password.' });
             }
             const user = result.rows[0];
-            logger.debug(`${result.rows},user ${user}`,);
+            logger.info(`${result.rows},user ${user}`,);
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (isMatch) {
@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(
 
     }));
 passport.serializeUser((user, done) => {
-    done(null,user.id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
+    done(null, user.id);  // (user as { id: number }).id Use type assertion to say that 'user' has an 'id'
 });
 passport.deserializeUser(async (id, done) => {
     try {

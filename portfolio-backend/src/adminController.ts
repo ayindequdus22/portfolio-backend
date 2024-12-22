@@ -15,7 +15,7 @@ const validateLoginSchema = Joi.object({
 })
 
 const addProject = async (req: Request, res: Response) => {
-    const { image, details, title, link, video,category } = req.body;
+    const { image, details, title, link, video, category } = req.body;
     if (!image || !video) {
         res.status(400).json({ message: "Image and video must be sent" })
     }
@@ -67,7 +67,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         // Validate request body
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
-            logger.debug(value, error);
+            logger.info(value, error);
             return res.status(400).json({ error: error.details[0].message });
         }
 
@@ -101,4 +101,4 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export {login,updateProject,deleteProject,addProject }
+export { login, updateProject, deleteProject, addProject }
