@@ -6,11 +6,10 @@ import "dotenv/config";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import csrf from 'csurf';
-import connectDb, { client } from './utils/connectDb';
-import logger from './utils/logger';
-import adminRouter from "./admin";
-import projectRouter from "./router"
-import strategy from "./strategy"
+import connectDb, { client } from './src/utils/connectDb';
+import adminRouter from "./src/admin";
+import projectRouter from "./src/router"
+import strategy from "./src/strategy"
 // Initialize the Express app
 const app: Application = express();
 

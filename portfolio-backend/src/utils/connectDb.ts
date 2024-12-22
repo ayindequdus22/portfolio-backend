@@ -1,6 +1,5 @@
 import "dotenv/config";
 import pg from "pg";
-import logger from "./logger";
 const { Pool } = pg;
 export const client = new Pool({
     // host:  process.env.host,
