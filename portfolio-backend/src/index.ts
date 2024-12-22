@@ -101,7 +101,7 @@ const startServer = async () => {
         logger.debug(`Server is running on http://localhost:${process.env.PORT}`);
       });
   } catch (error) {
-      console.error("Failed to start server:", error.message);
+      logger.error("Failed to start server:", error.message);
   }
 
 }

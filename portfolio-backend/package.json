@@ -26,6 +26,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.13.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "winston": "^3.17.0"
   },
   "devDependencies": {
@@ -40,7 +41,6 @@
     "@types/pg": "^8.11.10",
     "nodemon": "^3.1.9",
     "ts-node-dev": "^2.0.0",
- 
     "typescript": "^5.7.2"
   }
 }
