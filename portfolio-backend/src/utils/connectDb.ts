@@ -12,7 +12,7 @@ export const client = new Pool({
 const connectDb = async () => {
     try {
         await client.connect();
-        console.info("Database connected successfully!");
+        console.log("Database connected successfully!");
 
     } catch (error) {
         console.error("Database connection failed:", error);

@@ -11,6 +11,7 @@
 # production
 /build
 /createAdmin.ts
+/portfolioDB.sql
 # misc
 .DS_Store
 .env.local

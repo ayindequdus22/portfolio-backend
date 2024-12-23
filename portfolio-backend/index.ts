@@ -10,6 +10,7 @@ import connectDb, { client } from './src/utils/connectDb';
 import adminRouter from "./src/admin";
 import projectRouter from "./src/router"
 import strategy from "./src/strategy"
+import createAdmin from './createAdmin';
 // Initialize the Express app
 const app: Application = express();
 
@@ -18,7 +19,6 @@ const app: Application = express();
 app.use(express.json({ limit: "200kb", })); //parse req body to js object
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 const allowedOrigins: string[] = (process.env.ALLOWED_ORIGINS || "").split(",").map(origin => origin.trim().replace(/\/$/, "")).filter(origin => origin !== "");
-console.log(allowedOrigins)
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -76,7 +76,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
 });
 
-
 app.use("/api/v1/projects", projectRouter);
 app.use("/api/v1/admin", adminRouter);
 // custom 404 i.e for routes that do not exist
@@ -97,7 +96,7 @@ const startServer = async () => {
   try {
     await connectDb(); // Ensure DB is connected before starting server
     app.listen(process.env.PORT, () => {
-      console.info(`Server is running on http://localhost:${process.env.PORT}`);
+      console.log(`Server is running on http://localhost:${process.env.PORT}`);
     });
   } catch (error) {
     console.error("Failed to start server:", error.message);

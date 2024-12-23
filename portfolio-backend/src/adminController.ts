@@ -11,7 +11,7 @@ const validateLoginSchema = Joi.object({
         .max(30)
         .required(),
     role: Joi.string().max(5).min(5).required(),
-    password: Joi.string().min(6).max(30).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+    password: Joi.string().min(6).max(30).pattern(new RegExp('^[a-zA-Z0-9-]{3,30}$')),
 })
 
 const addProject = async (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         // Validate request body
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
-            console.info(value, error);
+        
             return res.status(400).json({ error: error.details[0].message });
         }
 
