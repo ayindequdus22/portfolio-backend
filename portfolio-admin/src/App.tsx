@@ -5,9 +5,13 @@ import Home from './Home';
 import { UserContext } from './context';
 
 function App(): React.JSX.Element {
+ 
 // userContext?.data
   const userContext = useContext(UserContext);
-  const isUser = userContext?.data?.username;
+  const isUser = userContext?.data?.[0]?.email;
+if(userContext?.isLoading){
+  return <h1>Is Loading</h1>
+}
   const router = createBrowserRouter([
     { path: "/admin/auth/login", element: !isUser ? <Login /> : <Navigate to={"/admin"} /> },
     { path: '/admin', element: isUser ? <Home /> : <Navigate to={"/admin/auth/login"} /> }

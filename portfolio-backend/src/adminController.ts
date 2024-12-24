@@ -3,7 +3,6 @@ import { v2 as cloudinary } from "cloudinary";
 import { client } from "./utils/connectDb";
 import passport from "passport";
 import Joi from "joi";
-import { admin } from "./admin";
 const validateLoginSchema = Joi.object({
     username: Joi.string().max(6).min(6).required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
@@ -25,7 +24,7 @@ const addProject = async (req: Request, res: Response) => {
             .upload(image);
         const uploadedVideo = await cloudinary.uploader
             .upload(video);
-        const value = [uploadedImg.url, details, title, link, uploadedVideo.url,category];
+        const value = [uploadedImg.url, details, title, link, uploadedVideo.url, category];
 
         const projectExists = await client.query(`Select id from projects WHERE id = $1`, [link]);
         if (projectExists.rows.length) {
@@ -55,19 +54,19 @@ const deleteProject = async (req: Request, res: Response) => {
 const updateProject = async (req: Request, res: Response) => {
 
 };
-const getUser = async(req:Request,res:Response)=>{
+const getUser = async (req: Request, res: Response) => {
     try {
         const id = req.user?.id;
-        const user = await client.query("Select username, email, id from users where id=$1",[id]);
+        const user = await client.query("Select username, email, id from users where id=$1", [id]);
 
-        if (user.rows.length ===0 ) {
-          return res.status(404).json({ message: 'User not found' });
+        if (user.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
         }
         return res.status(200).json(user.rows);
-      } catch (err) {
+    } catch (err) {
         console.error('Error fetching user:', err);
         return res.status(500).json({ message: 'Error fetching user', error: err.message });
-      }
+    }
 }
 const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -81,7 +80,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         // Validate request body
         const { value, error } = validateLoginSchema.validate(req.body);
         if (error) {
-        
+
             return res.status(400).json({ error: error.details[0].message });
         }
 
@@ -114,4 +113,4 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export { login, updateProject, deleteProject, addProject,getUser }
+export { login, updateProject, deleteProject, addProject, getUser }

@@ -8,7 +8,7 @@ export const ensureAuthenticated = (req, res, next) => {
     }
     next();
   }
-admin.get("/",ensureAuthenticated,getUser);
+admin.get("/",getUser);
 admin.post("/login",login);
 admin.post("/add-project",addProject);
 admin.delete("/delete-project",deleteProject);

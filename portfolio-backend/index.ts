@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import cors, { CorsOptions } from "cors";
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import "dotenv/config";
 import session from "express-session";
@@ -35,22 +36,28 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.use(helmet());
 const pgSession = connectPgSimple(session);
+
+app.use(cookieParser());
 app.use(session({
   secret: `${process.env.secret}`,
   saveUninitialized: false,
-  resave: false,
+  resave: false, 
+  name:"sessionId",
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
+    httpOnly: false,
+    secure: false,
+    // sameSite: 'strict',
   },
   store: new pgSession({ pool: client })
 }));
 
+
+
+
 app.use(strategy.initialize());
 app.use(strategy.session());
-const csrfProtection = csrf({ cookie: true });
+// const csrfProtection = csrf({ cookie: true });
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
 // req.protocol  req.secure
