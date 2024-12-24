@@ -7,7 +7,69 @@
     @apply text-[62.5%] text-base overflow-x-hidden;
 
   }
-  
+  @layer components {
+    .btn{
+    @apply h-10 rounded-md mt-2 text-center text-xl  text-white
+    }
+    .formInput {
+        @apply h-10 pl-3 rounded-md outline-none w-80 text-sm max-phone:w-64;
+    }
+
+/* 
+    .authHeader {
+        @apply bg-zinc-900 absolute px-5 rounded-2xl mx-[4%]
+    } */
+
+
+
+    .dfAc {
+        @apply flex items-center justify-center;
+    }
+
+    .df-jc {
+        @apply flex justify-center;
+    }
+
+    .df-ac {
+        @apply flex items-center;
+    }
+
+    .df-jsb-ac {
+        @apply flex items-center justify-between;
+    }
+
+    .dfDcAc {
+        @apply flex items-center justify-center flex-col;
+    }
+
+    .df-jsb {
+        @apply flex justify-between;
+    }
+
+    .df-jse {
+        @apply flex justify-self-end;
+    }
+
+    .df-fldc {
+        @apply flex flex-col;
+    }
+
+    .df-flDc {
+        @apply flex items-center justify-center flex-col;
+    }
+
+    .df-fldc-jc {
+        @apply flex justify-center flex-col;
+    }
+
+    .df-fldc-ac {
+        @apply flex items-center flex-col;
+    }
+
+    .dfAcW {
+        @apply flex items-center justify-center flex-wrap;
+    }
+}
 }
 
 :root {

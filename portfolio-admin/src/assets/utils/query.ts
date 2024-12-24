@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import Axios from "./axios"
 
 const useMyQuery = <ResponseType>(url: string, querykey: string) => {
@@ -12,14 +12,17 @@ const useMyQuery = <ResponseType>(url: string, querykey: string) => {
     
     })
 }
-const useMyMutation = <ResponseType, PayloadType>(url: string, mutationKey: string) => {
+const useMyMutation = <PayloadType>(url: string, mutationKey: string) => {
+    const queryClient = useQueryClient();
     return useMutation({
         mutationKey: [mutationKey], mutationFn: async (params: PayloadType) => {
             const response = await Axios.post(url, params);
-            const data: ResponseType = response.data
+            const data: ResponseType =  response?.data
             return data;
 
-        }
+        }, onSuccess() {
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        },
     })
 }
 export {useMyMutation,useMyQuery}

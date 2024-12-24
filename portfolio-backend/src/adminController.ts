@@ -56,15 +56,14 @@ const updateProject = async (req: Request, res: Response) => {
 
 };
 const getUser = async(req:Request,res:Response)=>{
-    console.log("first")
     try {
         const id = req.user?.id;
-        const user = await client.query("Select * from users where id=$1",[id]);
+        const user = await client.query("Select username, email, id from users where id=$1",[id]);
 
-        if (!user) {
+        if (user.rows.length ===0 ) {
           return res.status(404).json({ message: 'User not found' });
         }
-        return res.status(200).json({ message: 'Successful', user });
+        return res.status(200).json(user.rows);
       } catch (err) {
         console.error('Error fetching user:', err);
         return res.status(500).json({ message: 'Error fetching user', error: err.message });
@@ -89,7 +88,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         // Authenticate user
         passport.authenticate('local', async (err, user, info) => {
             if (err) {
-                console.error('Authentication error:', err);
                 return res.status(500).json({ message: 'An error occurred during authentication.', error: err.message });
             }
 

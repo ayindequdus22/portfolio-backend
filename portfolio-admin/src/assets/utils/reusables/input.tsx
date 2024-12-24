@@ -1,5 +1,6 @@
 import { UseFormRegisterReturn, FieldError } from "react-hook-form";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 type AuthInputType = {
     register: UseFormRegisterReturn; fieldError: FieldError | undefined;
     placeholder: string
@@ -14,10 +15,10 @@ type InputPasswordProps = {
 const InputPassword = (props: InputPasswordProps) => {
     return (
         <div className="">
-            <div className='relative h-full df-ac justify-end my-2'>
+            <div className='relative h-full df-ac justify-end'>
                 <input type={!props.showPassword ? "password" : "text"} {...props.register} id={props.id} className='formInput' autoComplete='true' placeholder={props.placeholder} />
                 <label htmlFor={props.id} className='absolute pr-4 cursor-pointer bg-white text-xl' onClick={() => props.setShowPassword(!props.showPassword)} >
-                    {/* <FontAwesomeIcon icon={!props.showPassword ? faEyeSlash : faEye} /> */}
+                    <FontAwesomeIcon icon={!props.showPassword ? faEyeSlash : faEye} />
                 </label>
 
             </div>

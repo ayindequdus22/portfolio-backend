@@ -5,12 +5,12 @@ import Home from './Home';
 import { UserContext } from './context';
 
 function App(): React.JSX.Element {
+// userContext?.data
   const userContext = useContext(UserContext);
-  const isUser = userContext?.data;
-  console.log(userContext)
+  const isUser = userContext?.data?.username;
   const router = createBrowserRouter([
-    { path: "/admin/auth/login", element: isUser ? <Login /> : <Navigate to={"/admin"} /> },
-    { path: '/admin', element: !isUser ? <Home /> : <Navigate to={"/admin/auth/login"} /> }
+    { path: "/admin/auth/login", element: !isUser ? <Login /> : <Navigate to={"/admin"} /> },
+    { path: '/admin', element: isUser ? <Home /> : <Navigate to={"/admin/auth/login"} /> }
   ],);
   return (
     <>

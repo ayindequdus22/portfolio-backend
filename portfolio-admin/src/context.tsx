@@ -1,12 +1,14 @@
 import React, { createContext } from "react";
 import { useMyQuery } from "./assets/utils/query";
-
-type UserType = {
-    data: any;
+type User = {
+    username: string, email: string, id: string
+  }
+export type UserResponseType = {
+    data: User | unknown;
     isLoading: boolean;
     error: Error | null;
 }
-export  const UserContext = createContext<UserType | null>(null);
+export  const UserContext = createContext<UserResponseType | null>(null);
 const UsercontextProvider = ({ children }: { children: React.ReactNode }) => {
     const { data, isLoading, error } = useMyQuery("/admin", "auth-user");
     return (
