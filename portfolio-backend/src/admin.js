@@ -1,7 +1,14 @@
 import express,{ Router } from "express";
-import { addProject, deleteProject, login, updateProject } from "./adminController";
+import { addProject, deleteProject, getUser, login, updateProject } from "./adminController";
 
-const admin = express.Router();
+export const admin = express.Router();
+export const ensureAuthenticated = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+    next();
+  }
+admin.get("/",ensureAuthenticated,getUser);
 admin.post("/login",login);
 admin.post("/add-project",addProject);
 admin.delete("/delete-project",deleteProject);

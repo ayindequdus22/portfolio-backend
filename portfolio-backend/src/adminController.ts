@@ -3,6 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { client } from "./utils/connectDb";
 import passport from "passport";
 import Joi from "joi";
+import { admin } from "./admin";
 const validateLoginSchema = Joi.object({
     username: Joi.string().max(6).min(6).required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
@@ -54,6 +55,21 @@ const deleteProject = async (req: Request, res: Response) => {
 const updateProject = async (req: Request, res: Response) => {
 
 };
+const getUser = async(req:Request,res:Response)=>{
+    console.log("first")
+    try {
+        const id = req.user?.id;
+        const user = await client.query("Select * from users where id=$1",[id]);
+
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(200).json({ message: 'Successful', user });
+      } catch (err) {
+        console.error('Error fetching user:', err);
+        return res.status(500).json({ message: 'Error fetching user', error: err.message });
+      }
+}
 const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { username, email, password, role } = req.body;
@@ -100,4 +116,4 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export { login, updateProject, deleteProject, addProject }
+export { login, updateProject, deleteProject, addProject,getUser }

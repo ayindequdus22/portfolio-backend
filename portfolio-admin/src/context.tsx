@@ -8,7 +8,7 @@ type UserType = {
 }
 export  const UserContext = createContext<UserType | null>(null);
 const UsercontextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { data, isLoading, error } = useMyQuery("/v1/admin", "auth-user");
+    const { data, isLoading, error } = useMyQuery("/admin", "auth-user");
     return (
         <UserContext.Provider value={{ data, isLoading, error }}>
             {children}
