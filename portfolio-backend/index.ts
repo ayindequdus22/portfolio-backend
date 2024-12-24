@@ -9,8 +9,7 @@ import csrf from 'csurf';
 import connectDb, { client } from './src/utils/connectDb';
 import adminRouter from "./src/admin";
 import projectRouter from "./src/router"
-import strategy from "./src/strategy"
-import createAdmin from './createAdmin';
+import strategy from "./src/strategy";
 // Initialize the Express app
 const app: Application = express();
 

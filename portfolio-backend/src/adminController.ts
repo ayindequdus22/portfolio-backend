@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { client } from "./utils/connectDb";
-import logger from "./utils/logger";
 import passport from "passport";
 import Joi from "joi";
 const validateLoginSchema = Joi.object({
@@ -25,7 +24,7 @@ const addProject = async (req: Request, res: Response) => {
             .upload(image);
         const uploadedVideo = await cloudinary.uploader
             .upload(video);
-        const value = [uploadedImg.url, details, title, link, uploadedVideo.url];
+        const value = [uploadedImg.url, details, title, link, uploadedVideo.url,category];
 
         const projectExists = await client.query(`Select id from projects WHERE id = $1`, [link]);
         if (projectExists.rows.length) {
