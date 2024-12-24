@@ -1,12 +1,17 @@
-import React from 'react'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Login from './pages/Login';
 import Home from './Home';
+import { UserContext } from './context';
 
 function App(): React.JSX.Element {
+  const userContext = useContext(UserContext);
+  const isUser = userContext?.data;
+  console.log(userContext)
   const router = createBrowserRouter([
-    { path: "/login", element: <Login /> },{path:'',element:<Home/>}
-  ]);
+    { path: "/admin/auth/login", element: isUser ? <Login /> : <Navigate to={"/admin"} /> },
+    { path: '/admin', element: !isUser ? <Home /> : <Navigate to={"/admin/auth/login"} /> }
+  ],);
   return (
     <>
       <RouterProvider router={router} />
