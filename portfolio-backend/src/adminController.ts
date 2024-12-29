@@ -14,7 +14,10 @@ const validateLoginSchema = Joi.object({
 })
 
 const addProject = async (req: Request, res: Response) => {
-    const { image, details, title, link, video, category } = req.body;
+    const { image, lDescription, bDescription, title, link, video, category } = req.body;
+    if (!lDescription || !bDescription || !title || !link || !category) {
+        res.status(400).json({ message: "One field is missing" });
+    }
     if (!image || !video) {
         res.status(400).json({ message: "Image and video must be sent" })
     }
@@ -24,13 +27,13 @@ const addProject = async (req: Request, res: Response) => {
             .upload(image);
         const uploadedVideo = await cloudinary.uploader
             .upload(video);
-        const value = [uploadedImg.url, details, title, link, uploadedVideo.url, category];
+        const value = [title, uploadedImg.url, uploadedVideo.url, lDescription, bDescription, category, link];
 
         const projectExists = await client.query(`Select id from projects WHERE id = $1`, [link]);
         if (projectExists.rows.length) {
             res.status(400).json("Project exists");
         }
-        await client.query(`Insert into projects(name,title,image,video,lDescription,bDescription,category) values  ($1, $2, $3, $4, $5, $6,$7)
+        await client.query(`Insert into projects(title,image,video,lDescription,bDescription,category,link) values  ($1, $2, $3, $4, $5, $6,$7)
 `, value);
         res.status(201).json("Project has been added");
     } catch (error) {

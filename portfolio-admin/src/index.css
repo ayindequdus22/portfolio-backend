@@ -4,8 +4,11 @@
 
 @layer base {
   html {
-    @apply text-[62.5%] text-base overflow-x-hidden;
+    @apply text-[62.5%] text-base overflow-x-hidden bg-black text-white;
 
+  }
+  input{
+    @apply text-black
   }
   @layer components {
     .btn{
@@ -14,11 +17,6 @@
     .formInput {
         @apply h-10 pl-3 rounded-md outline-none w-80 text-sm max-phone:w-64;
     }
-
-/* 
-    .authHeader {
-        @apply bg-zinc-900 absolute px-5 rounded-2xl mx-[4%]
-    } */
 
 
 
@@ -79,3 +77,5 @@
 
 @tailwind components;
 @tailwind utilities;
+
+
