@@ -8,13 +8,13 @@ import AddProject from './AddProject';
 function App(): React.JSX.Element {
  
 // userContext?.data
-  const userContext = useContext(UserContext);
+  // const userContext = useContext(UserContext);
   // const isUser = userContext?.data?.[0]?.email;
   const isUser = true;
 
-  if(userContext?.isLoading){
-  return <h1>Is Loading</h1>
-}
+//   if(userContext?.isLoading){
+//   return <h1>Is Loading</h1>
+// }
   const router = createBrowserRouter([
     {path:"/",element:<><Navigate to={"/admin"}/>
     </>},

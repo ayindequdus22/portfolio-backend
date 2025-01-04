@@ -22,9 +22,9 @@ const InputPassword = (props: InputPasswordProps) => {
                 </label>
 
             </div>
-            {props.passwordError && <p className='text-[red] text-base '>
-                {props.passwordError.message?.toString()}
-            </p >}
+            <p className='text-[red] text-base '>
+                {props.passwordError?.message?.toString()}
+            </p >
         </div>)
 }
 const AuthInput = (props: AuthInputType) => {
@@ -32,10 +32,10 @@ const AuthInput = (props: AuthInputType) => {
 
         <input type="text" {...props.register} placeholder={props.placeholder} className='formInput' />
 
-        {props.fieldError && <p className='text-[red] text-base py-1'>
-            {props.fieldError.message?.toString()}
-        </p >}
+        <p className='text-[red] text-base py-1'>
+            {props.fieldError?.message?.toString()}
+        </p >
     </div>
     )
 }
-export {AuthInput,InputPassword}
+export { AuthInput, InputPassword }
