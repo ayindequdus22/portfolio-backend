@@ -11,7 +11,7 @@ import * as cloud from './assets/utils/axios';
 const AddProject = (): React.JSX.Element => {
 
     const { mutate,isPending } = useMyMutation("/admin/add-project", "addProject");
-
+   
     type ProjectType = {
         title: string,
         image: string,
