@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { v2 as cloudinary } from "cloudinary";
 import { client } from "./utils/connectDb";
 import passport from "passport";
 import Joi from "joi";
@@ -11,31 +10,31 @@ const validateLoginSchema = Joi.object({
         .required(),
     role: Joi.string().max(5).min(5).required(),
     password: Joi.string().min(6).max(30).pattern(new RegExp('^[a-zA-Z0-9-]{3,30}$')),
-})
+});
+
 
 const addProject = async (req: Request, res: Response) => {
-    const { image, lDescription, bDescription, title, link, video, category } = req.body;
-    if (!lDescription || !bDescription || !title || !link || !category) {
-        res.status(400).json({ message: "One field is missing" });
-    }
-    if (!image || !video) {
-        res.status(400).json({ message: "Image and video must be sent" })
-    }
     try {
-
-        const uploadedImg = await cloudinary.uploader
-            .upload(image);
-        const uploadedVideo = await cloudinary.uploader
-            .upload(video);
-        const value = [title, uploadedImg.url, uploadedVideo.url, lDescription, bDescription, category, link];
-
-        const projectExists = await client.query(`Select id from projects WHERE id = $1`, [link]);
-        if (projectExists.rows.length) {
-            res.status(400).json("Project exists");
+        console.log(req.body);
+        const { lDescription, bDescription, title, link, category, image, video } = req.body;
+        if (!lDescription || !bDescription || !title || !link || !category || !image || !video) {
+            return res.status(400).json({ message: "One field is missing" });
         }
-        await client.query(`Insert into projects(title,image,video,lDescription,bDescription,category,link) values  ($1, $2, $3, $4, $5, $6,$7)
-`, value);
-        res.status(201).json("Project has been added");
+
+        const projectExists = await client.query(
+            `SELECT link FROM projects WHERE link = $1`,
+            [link]
+        );
+        if (projectExists.rows.length) {
+            return res.status(400).json("Project exists");
+        }
+        const value = [title, image, video, lDescription, bDescription, category, link];
+
+        await client.query(
+            `INSERT INTO projects (title, image, video, lDescription, bDescription, category, link) 
+   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            value
+        );
     } catch (error) {
         console.error("Error adding project:", error);
         res.status(500).json({ message: "Unable to add project at this time" });

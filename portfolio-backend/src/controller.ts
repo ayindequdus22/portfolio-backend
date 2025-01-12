@@ -22,7 +22,6 @@ const getSpecificProject = async (req: Request, res: Response) => {
         console.error("DBERR", error);
         res.status(500).json({ message: "Projects doesn't exist" });
     }
-
 };
 
 

@@ -1,12 +1,10 @@
 import express, { Application, Request, Response } from 'express';
-import { v2 as cloudinary } from 'cloudinary';
 import cors, { CorsOptions } from "cors";
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import "dotenv/config";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
-import csrf from 'csurf';
 import connectDb, { client } from './src/utils/connectDb';
 import adminRouter from "./src/admin";
 import projectRouter from "./src/router"
@@ -16,8 +14,8 @@ const app: Application = express();
 
 // Middlewares
 
-app.use(express.json({ limit: "200kb", })); //parse req body to js object
-app.use(express.urlencoded({ extended: true, limit: "5mb" }));
+app.use(express.json({ limit: "200mb", })); //parse req body to js object
+app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 const allowedOrigins: string[] = (process.env.ALLOWED_ORIGINS || "").split(",").map(origin => origin.trim().replace(/\/$/, "")).filter(origin => origin !== "");
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
@@ -41,8 +39,8 @@ app.use(cookieParser());
 app.use(session({
   secret: `${process.env.secret}`,
   saveUninitialized: false,
-  resave: false, 
-  name:"sessionId",
+  resave: false,
+  name: "sessionId",
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
     httpOnly: false,
@@ -52,12 +50,9 @@ app.use(session({
   store: new pgSession({ pool: client })
 }));
 
-
-
-
 app.use(strategy.initialize());
 app.use(strategy.session());
-// const csrfProtection = csrf({ cookie: true });
+
 // // to prevent attackers from knowing the type of technology user
 app.disable('x-powered-by');
 // req.protocol  req.secure
@@ -70,11 +65,14 @@ app.disable('x-powered-by');
 //   next();
 // });
 
-
-cloudinary.config({
-  cloud_name: process.env.cloud_name,
-  api_key: process.env.cloud_api_key,
-  api_secret: process.env.cloud_api_secret,
+// custom error handler
+app.use((err:any, req, res, next) => {
+  console.log(err)
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ message: 'Invalid JSON in request body' });
+  }
+  console.error(err.stack)
+  res.status(500).send('Something broke!');
 });
 
 // Routes
@@ -87,13 +85,8 @@ app.use("/api/v1/admin", adminRouter);
 // custom 404 i.e for routes that do not exist
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!")
-})
+});
 
-// custom error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
-})
 
 // Start the server
 

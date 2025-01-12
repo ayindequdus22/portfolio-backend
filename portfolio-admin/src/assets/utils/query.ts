@@ -9,15 +9,14 @@ const useMyQuery = <ResponseType>(url: string, querykey: string) => {
             return data;
         },
         retry: false,
-    
-    })
+});
 }
 const useMyMutation = <PayloadType>(url: string, mutationKey: string) => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationKey: [mutationKey], mutationFn: async (params: PayloadType) => {
             const response = await Axios.post(url, params);
-            const data: ResponseType =  response?.data
+            const data: ResponseType = response?.data
             return data;
 
         }, onSuccess() {
@@ -25,4 +24,4 @@ const useMyMutation = <PayloadType>(url: string, mutationKey: string) => {
         },
     })
 }
-export {useMyMutation,useMyQuery}
+export { useMyMutation, useMyQuery }

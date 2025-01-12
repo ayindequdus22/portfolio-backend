@@ -3,12 +3,14 @@ import { AuthInput } from './assets/utils/reusables/input'
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMyMutation } from './assets/utils/query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage,  faVideo } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faVideo } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
+import axios from 'axios';
+import * as cloud from './assets/utils/axios';
 
 const AddProject = (): React.JSX.Element => {
 
-    const { mutate } = useMyMutation("/admin/add-project", "addProject");
+    const { mutate,isPending } = useMyMutation("/admin/add-project", "addProject");
 
     type ProjectType = {
         title: string,
@@ -38,49 +40,176 @@ const AddProject = (): React.JSX.Element => {
         }
     };
 
-   const handleVideoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleVideoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-
-        // Validation checks
-        if (!file || videoPreview) {
-            alert('No file selected.');
-            return;
+        if (file) {
+            if (file.type.startsWith('video/')) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setVideoPreview(reader.result as string); // Set image preview URL
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a valid video file.');
+                event.target.value = ''; // Reset input
+            }
         }
-        if (!file.type.startsWith('video/')) {
-            alert('Please upload a valid video file.');
-            event.target.value = ''; // Clear the input
-            return;
-        }
-        if (file.size > 1000 * 1024 * 1024) { // Limit to 10MB
-            alert('Video size should not exceed 1000MB.');
-            event.target.value = ''; // Clear the input
-            return;
-        }
+        // // Validation checks
+        // if (!file || videoPreview) {
+        //     alert('No file selected.');
+        //     return;
+        // }
+        // if (!file.type.startsWith('video/')) {
+        //     alert('Please upload a valid video file.');
+        //     event.target.value = ''; // Clear the input
+        //     return;
+        // }
+        // if (file.size > 1000 * 1024 * 1024) { // Limit to 10MB
+        //     alert('Video size should not exceed 1000MB.');
+        //     event.target.value = ''; // Clear the input
+        //     return;
+        // }
 
         // Set preview
-        setVideoPreview(URL.createObjectURL(file));
+        // setVideoPreview(URL.createObjectURL(file));
+
     };
 
-    const { formState: { errors }, register, handleSubmit } = useForm<ProjectType>();
-    const submitHandler: SubmitHandler<ProjectType> = async (data) => {
-        mutate(data, {
-            onSuccess: (response) => {
-                console.log("Success:", response);
-            },
-            onError: (error) => {
-                console.error("Error:", error);
-            },
-        });
+    const { formState: { errors, }, register, handleSubmit, watch, } = useForm<ProjectType>();
+    // const img = watch("image");
+    // console.log(img) // mutate(data, {
+        //     onSuccess: (response) => {
+        //         console.log("Success:", response);
+        //     },
+        //     onError: (error) => {
+        //         console.error("Error:", error);
+        //     },
+        // });
+        // console.log("Sending equest")
+        // try {
+        //     const res = await axios.post(`http://localhost:7000/api/v1/admin/add-project`,
+        //     {image:imagePreview,video:videoPreview},
+        //     {timeout:3000000,
+        //         headers: {
+        //           'Content-Type': 'multipart/form-data',
+        //         }},)      
+        //     console.log(res.data)
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+        //         const file = [imagePreview, videoPreview]
+        //         const promises = file.map((f) => {
+        //         const formData = new FormData();
+        //         formData.append('file', f);
+        //         console.log(f);
+        //         formData.append('upload_preset', cloud.cloudUploadPreset);
+        //         formData.append('folder', cloud.cloudUploadFolder);
+        //     const res =    axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/video/upload`, formData,   {
+        //         headers: {
+        //           'Content-Type': 'multipart/form-data',
+        //         },
+        //         onUploadProgress: (progressEvent) => {
+        //           const percentCompleted = Math.round(
+        //             (progressEvent.loaded * 100) / progressEvent.total
+        //           );
+        //           console.log(`Upload progress: ${percentCompleted}%`);
+        //         },
+        //       })
+        //       console.log(res)
+        // return res;    
+        // }    
+        //     )
+
+        //     try {
+        //         const responses = await Promise.all(promises);
+        //         responses.forEach((res) => console.log('Uploaded file:', res));
+        //       } catch (error) {
+        //         console.error('Error uploading files:', error);
+        //       }
+        // }
+    const submitHandler: SubmitHandler<ProjectType> = async (formFields) => {
+       const {bDescription,category,lDescription,title,link} =  formFields;
+        const formData = new FormData();
+        formData.append('upload_preset', cloud.cloudUploadPreset);
+        formData.append('folder', cloud.cloudUploadFolder);
+
+
+        const uploadVideo = async () => {
+            try {
+                formData.append('file', videoPreview);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/video/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        console.log(`Upload Video progress: ${percentCompleted}%`);
+                    },
+                })
+                console.log(res.data.url);
+                // setVideoUrl(res.data.url);
+                return res.data.url;
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        const uploadImage = async () => {
+            try {
+                formData.append('file', imagePreview);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/image/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        console.log(`Upload Image progress: ${percentCompleted}%`);
+                    },
+                })
+                // setImageUrl(res.data.url);
+                console.log(res.data.url);
+                return res.data.url;
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+        try {
+          const uploadedVideoUrl = await uploadVideo();
+        console.log('Uploaded Video URL:', uploadedVideoUrl);
+    
+        const uploadedImageUrl = await uploadImage();
+        console.log('Uploaded Image URL:', uploadedImageUrl);  
+      // title, image, video, lDescription, bDescription, category, link
+const data = {image:uploadedImageUrl,video:uploadedVideoUrl,title, lDescription, bDescription, category, link};
+
+mutate(
+data, {
+        onSuccess: (response) => {
+            console.log("Success:", response);
+        },
+        onError: (error) => {
+            console.error("Error:", error);
+        },
+    });  
+        } catch (error) {
+         console.log(error)   
+        }
+       
+
     }
     return (
         <main>
             <h3>Add Project</h3>
             <form onSubmit={handleSubmit(submitHandler
-           
-            )}  //     (v) => {
-            //     console.log(v)
-            // }
-            className='df-flDc gap-2'>
+
+            )}
+                className='df-flDc gap-2'>
                 <AuthInput register={{
                     ...register("title", {
                         required: "Enter the title of the project", minLength: {
@@ -92,12 +221,12 @@ const AddProject = (): React.JSX.Element => {
                 }} placeholder='Title' fieldError={errors.title} />
                 <div>
 
-                    <textarea  className='h-80 w-80 text-black' {
+                    <textarea className='h-80 w-80 text-black' {
                         ...register("lDescription", {
                             required: "Enter a short description", minLength: {
-                                value: 0, message: "Short Description length must not be less than "
+                                value: 30, message: "Short Description length must not be less than "
                             }, maxLength: {
-                                value: 30, message: "Short Description length must not be greater than 200"
+                                value: 200, message: "Short Description length must not be greater than 200"
                             }
                         })
                     } placeholder='Short Description' />
@@ -107,9 +236,9 @@ const AddProject = (): React.JSX.Element => {
                     <textarea className='h-80 w-80 text-black' {
                         ...register("bDescription", {
                             required: "Enter a long description", minLength: {
-                                value: 0, message: "Long Description length must not be less than 200"
+                                value: 300, message: "Long Description length must not be less than 200"
                             }, maxLength: {
-                                value: 30, message: "Long Description length must not be greater than 800"
+                                value: 800, message: "Long Description length must not be greater than 800"
                             }
                         })
                     } placeholder='Long Description' />
@@ -117,8 +246,9 @@ const AddProject = (): React.JSX.Element => {
                 </div>
                 <div>
 
-                    <input type="file" id='imageInput' placeholder='Image' accept="image/*"    {...register('image', { required: 'Image is required' })}
-                        className='formInput invisible' onChange={handleImageChange} />
+                    <input type="file" id='imageInput' placeholder='Image' accept="image/*" onChange={handleImageChange}
+                        //   {...register('image', { required: 'Image is required' })} 
+                        className='formInput invisible' />
                     <label htmlFor="imageInput" className='w-[40rem] h-80 bg-white dfAc rounded-md'>
                         {imagePreview ?
                             (
@@ -142,11 +272,11 @@ const AddProject = (): React.JSX.Element => {
                     <input id='videoInput'
                         type="file"
                         accept="video/*"
-                        {...register('video', { required: 'Video is required' })}
+                        onChange={handleVideoChange}
                         className="formInput invisible"
-                        onChange={handleVideoChange} // Handle video selection
+                    // Handle video selection
                     />
-
+                    {/* {...register('video', { required: 'Video is required' })} */}
                     {/* Show video preview */}
                     <label htmlFor="videoInput" className='w-[40rem] h-80 bg-white dfAc rounded-md'>
                         {videoPreview ? (
@@ -166,12 +296,12 @@ const AddProject = (): React.JSX.Element => {
                     </label>
                     <p className='text-[red] text-base py-1'>{errors.video?.message?.toString()}</p>
                 </div>
-
+                
                 <AuthInput register={{
                     ...register("category", {
                         required: "Enter the category",
                         validate: (value) => {
-                            if ((value != "web") &&( value != "mobile") && (value != "backend"))
+                            if ((value != "web") && (value != "mobile") && (value != "backend"))
                                 return "Put the correct category"
                         }
                     })
@@ -186,7 +316,8 @@ const AddProject = (): React.JSX.Element => {
                         }
                     })
                 }} placeholder='Link' fieldError={errors.link} />
-                <button type='submit'>Submit</button>
+                {!isPending && <button type='submit'>Submit</button>}
+                
             </form>
 
         </main>
