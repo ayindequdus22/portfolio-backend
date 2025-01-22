@@ -10,8 +10,8 @@ import * as cloud from './assets/utils/axios';
 
 const AddProject = (): React.JSX.Element => {
 
-    const { mutate,isPending } = useMyMutation("/admin/add-project", "addProject");
-   
+    const { mutate, isPending } = useMyMutation("/admin/add-project", "addProject");
+
     type ProjectType = {
         title: string,
         image: string,
@@ -76,60 +76,9 @@ const AddProject = (): React.JSX.Element => {
     };
 
     const { formState: { errors, }, register, handleSubmit, watch, } = useForm<ProjectType>();
-    // const img = watch("image");
-    // console.log(img) // mutate(data, {
-        //     onSuccess: (response) => {
-        //         console.log("Success:", response);
-        //     },
-        //     onError: (error) => {
-        //         console.error("Error:", error);
-        //     },
-        // });
-        // console.log("Sending equest")
-        // try {
-        //     const res = await axios.post(`http://localhost:7000/api/v1/admin/add-project`,
-        //     {image:imagePreview,video:videoPreview},
-        //     {timeout:3000000,
-        //         headers: {
-        //           'Content-Type': 'multipart/form-data',
-        //         }},)      
-        //     console.log(res.data)
-        // } catch (error) {
-        //     console.log(error)
-        // }
-
-        //         const file = [imagePreview, videoPreview]
-        //         const promises = file.map((f) => {
-        //         const formData = new FormData();
-        //         formData.append('file', f);
-        //         console.log(f);
-        //         formData.append('upload_preset', cloud.cloudUploadPreset);
-        //         formData.append('folder', cloud.cloudUploadFolder);
-        //     const res =    axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/video/upload`, formData,   {
-        //         headers: {
-        //           'Content-Type': 'multipart/form-data',
-        //         },
-        //         onUploadProgress: (progressEvent) => {
-        //           const percentCompleted = Math.round(
-        //             (progressEvent.loaded * 100) / progressEvent.total
-        //           );
-        //           console.log(`Upload progress: ${percentCompleted}%`);
-        //         },
-        //       })
-        //       console.log(res)
-        // return res;    
-        // }    
-        //     )
-
-        //     try {
-        //         const responses = await Promise.all(promises);
-        //         responses.forEach((res) => console.log('Uploaded file:', res));
-        //       } catch (error) {
-        //         console.error('Error uploading files:', error);
-        //       }
-        // }
     const submitHandler: SubmitHandler<ProjectType> = async (formFields) => {
-       const {bDescription,category,lDescription,title,link} =  formFields;
+        console.log("Handling");
+        const { bDescription, category, lDescription, title, link } = formFields;
         const formData = new FormData();
         formData.append('upload_preset', cloud.cloudUploadPreset);
         formData.append('folder', cloud.cloudUploadFolder);
@@ -180,35 +129,33 @@ const AddProject = (): React.JSX.Element => {
 
         }
         try {
-          const uploadedVideoUrl = await uploadVideo();
-        console.log('Uploaded Video URL:', uploadedVideoUrl);
-    
-        const uploadedImageUrl = await uploadImage();
-        console.log('Uploaded Image URL:', uploadedImageUrl);  
-      // title, image, video, lDescription, bDescription, category, link
-const data = {image:uploadedImageUrl,video:uploadedVideoUrl,title, lDescription, bDescription, category, link};
+            const uploadedVideoUrl = await uploadVideo();
+            console.log('Uploaded Video URL:', uploadedVideoUrl);
 
-mutate(
-data, {
-        onSuccess: (response) => {
-            console.log("Success:", response);
-        },
-        onError: (error) => {
-            console.error("Error:", error);
-        },
-    });  
+            const uploadedImageUrl = await uploadImage();
+            console.log('Uploaded Image URL:', uploadedImageUrl);
+            // title, image, video, lDescription, bDescription, category, link
+            const data = { image: uploadedImageUrl, video: uploadedVideoUrl, title, lDescription, bDescription, category, link };
+
+            mutate(
+                data, {
+                onSuccess: (response) => {
+                    console.log("Success:", response);
+                },
+                onError: (error) => {
+                    console.error("Error:", error);
+                },
+            });
         } catch (error) {
-         console.log(error)   
+            console.log(error)
         }
-       
+
 
     }
     return (
         <main>
             <h3>Add Project</h3>
-            <form onSubmit={handleSubmit(submitHandler
-
-            )}
+            <form onSubmit={handleSubmit(submitHandler)}
                 className='df-flDc gap-2'>
                 <AuthInput register={{
                     ...register("title", {
@@ -221,7 +168,7 @@ data, {
                 }} placeholder='Title' fieldError={errors.title} />
                 <div>
 
-                    <textarea className='h-80 w-80 text-black' {
+                    <textarea className='h-40 w-[40rem] text-black rounded-md p-1' {
                         ...register("lDescription", {
                             required: "Enter a short description", minLength: {
                                 value: 30, message: "Short Description length must not be less than "
@@ -233,12 +180,12 @@ data, {
                     <p className='text-[red] text-base py-1'>{errors.lDescription?.message?.toString()}</p>
                 </div>
                 <div>
-                    <textarea className='h-80 w-80 text-black' {
+                    <textarea className='h-64 w-[40rem] px-2 py-1 rounded-md text-black' {
                         ...register("bDescription", {
                             required: "Enter a long description", minLength: {
                                 value: 300, message: "Long Description length must not be less than 200"
                             }, maxLength: {
-                                value: 800, message: "Long Description length must not be greater than 800"
+                                value: 900, message: "Long Description length must not be greater than 800"
                             }
                         })
                     } placeholder='Long Description' />
@@ -246,13 +193,13 @@ data, {
                 </div>
                 <div>
 
-                    <input type="file" id='imageInput' placeholder='Image' accept="image/*" onChange={handleImageChange}
-                        //   {...register('image', { required: 'Image is required' })} 
+                    <input type="file" id='imageInput' placeholder='Image' accept="image/*"  {...register('image', { required: 'Image is required' })}
+                        onChange={handleImageChange}
                         className='formInput invisible' />
-                    <label htmlFor="imageInput" className='w-[40rem] h-80 bg-white dfAc rounded-md'>
+                    <label htmlFor="imageInput" className='w-[40rem] h-80 bg-white dfAc rounded-md overflow-hidden'>
                         {imagePreview ?
                             (
-                                <img src={imagePreview} alt="Selected preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                                <img src={imagePreview} alt="Selected preview" className='h-[inherit] w-[inherit]' />
                             ) : (
 
                                 <label className='text-gray-600' htmlFor="imageInput">No image uploaded</label>
@@ -271,12 +218,12 @@ data, {
 
                     <input id='videoInput'
                         type="file"
-                        accept="video/*"
+                        accept="video/*" {...register('video', { required: 'Video is required' })}
                         onChange={handleVideoChange}
                         className="formInput invisible"
                     // Handle video selection
                     />
-                    {/* {...register('video', { required: 'Video is required' })} */}
+                    {/* */}
                     {/* Show video preview */}
                     <label htmlFor="videoInput" className='w-[40rem] h-80 bg-white dfAc rounded-md'>
                         {videoPreview ? (
@@ -296,7 +243,7 @@ data, {
                     </label>
                     <p className='text-[red] text-base py-1'>{errors.video?.message?.toString()}</p>
                 </div>
-                
+
                 <AuthInput register={{
                     ...register("category", {
                         required: "Enter the category",
@@ -316,8 +263,10 @@ data, {
                         }
                     })
                 }} placeholder='Link' fieldError={errors.link} />
-                {!isPending && <button type='submit'>Submit</button>}
-                
+                {!isPending ? <button type='submit'>Submit</button> : (
+                    <></>
+                )}
+
             </form>
 
         </main>

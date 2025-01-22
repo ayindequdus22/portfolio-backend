@@ -16,9 +16,9 @@ const InputPassword = (props: InputPasswordProps) => {
     return (
         <div className="">
             <div className='relative h-full df-ac justify-end'>
-                <input type={!props.showPassword ? "password" : "text"} {...props.register} id={props.id} className='formInput' autoComplete='true' placeholder={props.placeholder} />
-                <label htmlFor={props.id} className='absolute pr-4 cursor-pointer bg-white text-xl' onClick={() => props.setShowPassword(!props.showPassword)} >
-                    <FontAwesomeIcon icon={!props.showPassword ? faEyeSlash : faEye} />
+                <input type={!props.showPassword ? "password" : "text"} {...props.register} id={props.id} className='formInput  bg-white ' autoComplete='true' placeholder={props.placeholder} />
+                <label htmlFor={props.id} className='absolute w-12 cursor-pointer bg-white text-xl h-[inherit] dfAc rounded-r-md' onClick={() => props.setShowPassword(!props.showPassword)} >
+                    <FontAwesomeIcon icon={!props.showPassword ? faEyeSlash : faEye} className="text-black"/>
                 </label>
 
             </div>
