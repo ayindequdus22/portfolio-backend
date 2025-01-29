@@ -15,7 +15,6 @@ const validateLoginSchema = Joi.object({
 
 const addProject = async (req: Request, res: Response) => {
     try {
-        console.log(req.body);
         const { lDescription, bDescription, title, link, category, image, video } = req.body;
         if (!lDescription || !bDescription || !title || !link || !category || !image || !video) {
             return res.status(400).json({ message: "One field is missing" });

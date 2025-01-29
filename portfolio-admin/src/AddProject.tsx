@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { AuthInput } from './assets/utils/reusables/input'
+import { AuthInput } from './utils/reusables/input'
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMyMutation } from './assets/utils/query';
+import { useMyMutation } from './utils/query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faVideo } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
 import axios from 'axios';
-import * as cloud from './assets/utils/axios';
+import * as cloud from './utils/axios';
 
 const AddProject = (): React.JSX.Element => {
+
 
     const { mutate, isPending } = useMyMutation("/admin/add-project", "addProject");
 
@@ -135,7 +136,7 @@ const AddProject = (): React.JSX.Element => {
             const uploadedImageUrl = await uploadImage();
             console.log('Uploaded Image URL:', uploadedImageUrl);
             // title, image, video, lDescription, bDescription, category, link
-            const data = { image: uploadedImageUrl, video: uploadedVideoUrl, title, lDescription, bDescription, category, link };
+            const data = await { image: uploadedImageUrl, video: uploadedVideoUrl, title, lDescription, bDescription, category, link };
 
             mutate(
                 data, {
@@ -168,7 +169,7 @@ const AddProject = (): React.JSX.Element => {
                 }} placeholder='Title' fieldError={errors.title} />
                 <div>
 
-                    <textarea className='h-40 w-[40rem] text-black rounded-md p-1' {
+                    <textarea className='h-40 w-[40rem] resize-none text-black rounded-md p-1' {
                         ...register("lDescription", {
                             required: "Enter a short description", minLength: {
                                 value: 30, message: "Short Description length must not be less than "

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { useMyMutation } from '../assets/utils/query'
-import { AuthInput, InputPassword } from '../assets/utils/reusables/input';
+import { useMyMutation } from '../utils/query'
+import { AuthInput, InputPassword } from '../utils/reusables/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Button from '../assets/utils/reusables/button';
+import Button from '../utils/reusables/button';
 
 const Login = (): React.JSX.Element => {
-  const { mutate,error } = useMyMutation("/admin/login", "authUser");
+  const { mutate, error } = useMyMutation("/admin/login", "authUser");
 
   type FormType = {
     username: string,
@@ -18,12 +18,12 @@ const Login = (): React.JSX.Element => {
   const submitHandler: SubmitHandler<FormType> = async (data) => {
     mutate(data, {
       onSuccess: (response) => {
-          console.log("Success:", response);
+        console.log("Success:", response);
       },
       onError: (error) => {
-          console.error("Error:", error);
+        console.error("Error:", error);
       },
-  });
+    });
   }
   const [showPassword, setShowPassword] = useState(false);
   return (

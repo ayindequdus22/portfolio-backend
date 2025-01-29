@@ -9,7 +9,7 @@ const useMyQuery = <ResponseType>(url: string, querykey: string) => {
             return data;
         },
         retry: false,
-});
+    });
 }
 const useMyMutation = <PayloadType>(url: string, mutationKey: string) => {
     const queryClient = useQueryClient();
