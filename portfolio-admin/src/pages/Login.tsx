@@ -3,6 +3,7 @@ import { useMyMutation } from '../utils/query'
 import { AuthInput, InputPassword } from '../utils/reusables/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../utils/reusables/button';
+import { QueryClient } from '@tanstack/react-query';
 
 const Login = (): React.JSX.Element => {
   const { mutate } = useMyMutation("/admin/login", "authUser");
@@ -19,6 +20,8 @@ const Login = (): React.JSX.Element => {
     mutate(data, {
       onSuccess: (response) => {
         console.log("Success:", response);
+        const query = new QueryClient();
+        query.invalidateQueries({queryKey:"auth-user"});
       },
       onError: (error) => {
         console.error("Error:", error);

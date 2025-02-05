@@ -23,15 +23,18 @@ const AddProject = (): React.JSX.Element => {
         category: string
 
     };
-    const [imagePreview, setImagePreview] = useState<string | null>(null); // For image preview
-    const [videoPreview, setVideoPreview] = useState<string | null>(null);
+    const [preview, setPreview] = useState<{
+        imagePreview: string | null;
+        videoPreview: string | null;
+    }>({ imagePreview: null, videoPreview: null })
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    setImagePreview(reader.result as string); // Set image preview URL
+                    setPreview({ ...preview, imagePreview: reader.result as string })
+                    // setImagePreview(reader.result as string); // Set image preview URL
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -45,9 +48,14 @@ const AddProject = (): React.JSX.Element => {
         const file = event.target.files?.[0];
         if (file) {
             if (file.type.startsWith('video/')) {
+                if (file.size > 1000 * 1024 * 100) { // Limit to 10MB
+                    alert('Video size should not exceed 100MB.');
+                    event.target.value = ''; // Clear the input
+                    return;
+                }
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    setVideoPreview(reader.result as string); // Set image preview URL
+                    setPreview({ ...preview, videoPreview: reader.result as string }); // Set image preview URL
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -55,24 +63,7 @@ const AddProject = (): React.JSX.Element => {
                 event.target.value = ''; // Reset input
             }
         }
-        // // Validation checks
-        // if (!file || videoPreview) {
-        //     alert('No file selected.');
-        //     return;
-        // }
-        // if (!file.type.startsWith('video/')) {
-        //     alert('Please upload a valid video file.');
-        //     event.target.value = ''; // Clear the input
-        //     return;
-        // }
-        // if (file.size > 1000 * 1024 * 1024) { // Limit to 10MB
-        //     alert('Video size should not exceed 1000MB.');
-        //     event.target.value = ''; // Clear the input
-        //     return;
-        // }
-
-        // Set preview
-        // setVideoPreview(URL.createObjectURL(file));
+       
 
     };
 
@@ -87,10 +78,10 @@ const AddProject = (): React.JSX.Element => {
 
         const uploadVideo = async () => {
             try {
-                if(!videoPreview){
+                if (!preview.videoPreview) {
                     throw new Error("No video selected");
                 }
-                formData.append('file', videoPreview);
+                formData.append('file', preview.videoPreview);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/video/upload`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -112,10 +103,10 @@ const AddProject = (): React.JSX.Element => {
         }
         const uploadImage = async () => {
             try {
-                if(!imagePreview){
+                if (!preview.imagePreview) {
                     throw new Error("No image selected");
                 }
-                formData.append('file', imagePreview);
+                formData.append('file', preview.imagePreview);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/image/upload`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -204,9 +195,9 @@ const AddProject = (): React.JSX.Element => {
                         onChange={handleImageChange}
                         className='formInput invisible' />
                     <label htmlFor="imageInput" className='w-[40rem] h-80 bg-white dfAc rounded-md overflow-hidden'>
-                        {imagePreview ?
+                        {preview.imagePreview ?
                             (
-                                <img src={imagePreview} alt="Selected preview" className='h-[inherit] w-[inherit]' />
+                                <img src={preview.imagePreview} alt="Selected preview" className='h-[inherit] w-[inherit]' />
                             ) : (
 
                                 <label className='text-gray-600' htmlFor="imageInput">No image uploaded</label>
@@ -233,9 +224,9 @@ const AddProject = (): React.JSX.Element => {
                     {/* */}
                     {/* Show video preview */}
                     <label htmlFor="videoInput" className='w-[40rem] h-80 bg-white dfAc rounded-md'>
-                        {videoPreview ? (
+                        {preview.videoPreview ? (
                             <ReactPlayer
-                                url={videoPreview}
+                                url={preview.videoPreview}
                                 controls
                                 width="100%"
                                 height="100%"
