@@ -43,10 +43,10 @@ app.use(session({
   name: "sessionId",
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: false,
-    secure: false,
-    // sameSite: 'strict',
-  },
+    httpOnly: true,   
+    secure: true,   
+    sameSite: 'strict' 
+  },  
   store: new pgSession({ pool: client })
 }));
 

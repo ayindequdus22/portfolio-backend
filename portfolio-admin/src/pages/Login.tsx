@@ -4,10 +4,11 @@ import { AuthInput, InputPassword } from '../utils/reusables/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../utils/reusables/button';
 import { QueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 const Login = (): React.JSX.Element => {
   const { mutate } = useMyMutation("/admin/login", "authUser");
-
+const navigate = useNavigate();
   type FormType = {
     username: string,
     email: string,
@@ -22,6 +23,7 @@ const Login = (): React.JSX.Element => {
         console.log("Success:", response);
         const query = new QueryClient();
         query.invalidateQueries({queryKey:"auth-user"});
+        navigate("/admin/projects")
       },
       onError: (error) => {
         console.error("Error:", error);

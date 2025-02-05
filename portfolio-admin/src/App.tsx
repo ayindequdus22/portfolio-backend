@@ -9,7 +9,7 @@ import Project from './project/Project';
 function App(): React.JSX.Element {
 
   const userContext = useContext(UserContext);
-  const isUser = true;
+  const isUser = userContext?.data?.[0]?.email;
 
 
   if (userContext?.isLoading) {
