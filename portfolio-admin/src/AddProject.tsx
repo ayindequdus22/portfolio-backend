@@ -7,8 +7,10 @@ import { faImage, faVideo } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
 import axios from 'axios';
 import * as cloud from './utils/axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddProject = (): React.JSX.Element => {
+    const navigate = useNavigate();
 
 
     const { mutate, isPending } = useMyMutation("/admin/add-project", "addProject");
@@ -63,7 +65,7 @@ const AddProject = (): React.JSX.Element => {
                 event.target.value = ''; // Reset input
             }
         }
-       
+
 
     };
 
@@ -139,13 +141,14 @@ const AddProject = (): React.JSX.Element => {
                 data, {
                 onSuccess: (response) => {
                     console.log("Success:", response);
+                    navigate("/admin/projects");
                 },
                 onError: (error) => {
-                    console.error("Error:", error);
+                    throw new Error(`Error ${error}`);
                 },
             });
         } catch (error) {
-            console.log(error)
+            throw new Error(error as string);
         }
 
 
@@ -261,7 +264,7 @@ const AddProject = (): React.JSX.Element => {
                         }
                     })
                 }} placeholder='Link' fieldError={errors.link} />
-                {!isPending ? <button type='submit'>Submit</button> : (
+                {!isPending ? <button >Submit</button> : (
                     <></>
                 )}
 
