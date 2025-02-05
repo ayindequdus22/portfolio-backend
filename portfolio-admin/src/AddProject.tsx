@@ -76,7 +76,7 @@ const AddProject = (): React.JSX.Element => {
 
     };
 
-    const { formState: { errors, }, register, handleSubmit, watch, } = useForm<ProjectType>();
+    const { formState: { errors, }, register, handleSubmit, } = useForm<ProjectType>();
     const submitHandler: SubmitHandler<ProjectType> = async (formFields) => {
         console.log("Handling");
         const { bDescription, category, lDescription, title, link } = formFields;
