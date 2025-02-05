@@ -22,8 +22,8 @@ const navigate = useNavigate();
       onSuccess: (response) => {
         console.log("Success:", response);
         const query = new QueryClient();
+        navigate("/admin/projects");
         query.invalidateQueries({queryKey:"auth-user"});
-        navigate("/admin/projects")
       },
       onError: (error) => {
         console.error("Error:", error);

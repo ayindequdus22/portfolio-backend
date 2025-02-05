@@ -22,6 +22,10 @@ function App(): React.JSX.Element {
     },
     {
       path: "admin", children: [
+        { path: "/admin/", element: isUser ? <>
+        Go to admin/projects
+        </> : <Navigate to={"/admin/auth/login"} />, },
+
         { path: "/admin/auth/login", element: !isUser ? <Login /> : <Navigate to={"/admin"} />, },
         { path: '/admin/add-project', element: isUser ? <AddProject /> : <Navigate to={"/admin/auth/login"} /> },
         {
