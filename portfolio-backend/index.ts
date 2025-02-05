@@ -45,7 +45,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 1, // 1 hour
     secure: process.env.NODE_ENV !== "development", // Only secure in production
     httpOnly: true,
-    sameSite: "none", // 'none' for cross-site cookies, 'lax' for local dev
+    sameSite: "none",
   },
   store: new pgSession({ pool: client })
 }));
@@ -82,10 +82,13 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/api/v1/projects", projectRouter);
 app.use("/api/v1/admin", adminRouter);
+
 // custom 404 i.e for routes that do not exist
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!")
 });
+
+
 
 
 // Start the server
