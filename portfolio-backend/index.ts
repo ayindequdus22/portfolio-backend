@@ -42,14 +42,14 @@ app.use(session({
   resave: false,
   name: "sessionId",
   cookie: {
-    maxAge: 1000 * 60 * 60 * 1, // 1 hour
-    httpOnly: true,
     secure: process.env.NODE_ENV === "production", // Only secure in production
+    httpOnly: true,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' for cross-site cookies, 'lax' for local dev
+    maxAge: 1000 * 60 * 60 * 1, // 1 hour
   },
   store: new pgSession({ pool: client })
 }));
- 
+
 app.use(strategy.initialize());
 app.use(strategy.session());
 
@@ -66,7 +66,7 @@ app.disable('x-powered-by');
 // });
 
 // custom error handler
-app.use((err:any, req, res, next) => {
+app.use((err: any, req, res, next) => {
   console.log(err)
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     return res.status(400).json({ message: 'Invalid JSON in request body' });
