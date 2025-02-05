@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../utils/reusables/button';
 
 const Login = (): React.JSX.Element => {
-  const { mutate, error } = useMyMutation("/admin/login", "authUser");
+  const { mutate } = useMyMutation("/admin/login", "authUser");
 
   type FormType = {
     username: string,

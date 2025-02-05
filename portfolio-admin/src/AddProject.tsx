@@ -87,6 +87,9 @@ const AddProject = (): React.JSX.Element => {
 
         const uploadVideo = async () => {
             try {
+                if(!videoPreview){
+                    throw new Error("No video selected");
+                }
                 formData.append('file', videoPreview);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/video/upload`, formData, {
                     headers: {
@@ -94,7 +97,7 @@ const AddProject = (): React.JSX.Element => {
                     },
                     onUploadProgress: (progressEvent) => {
                         const percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
+                            (progressEvent.loaded * 100) / (progressEvent.total as number)
                         );
                         console.log(`Upload Video progress: ${percentCompleted}%`);
                     },
@@ -109,6 +112,9 @@ const AddProject = (): React.JSX.Element => {
         }
         const uploadImage = async () => {
             try {
+                if(!imagePreview){
+                    throw new Error("No image selected");
+                }
                 formData.append('file', imagePreview);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud.cloudName}/image/upload`, formData, {
                     headers: {
@@ -116,7 +122,7 @@ const AddProject = (): React.JSX.Element => {
                     },
                     onUploadProgress: (progressEvent) => {
                         const percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
+                            (progressEvent.loaded * 100) / (progressEvent.total as number)
                         );
                         console.log(`Upload Image progress: ${percentCompleted}%`);
                     },
