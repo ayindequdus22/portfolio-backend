@@ -43,13 +43,13 @@ app.use(session({
   name: "sessionId",
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: true,   
-    secure: true,   
-    sameSite: 'strict' 
-  },  
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  },
   store: new pgSession({ pool: client })
 }));
-
+ 
 app.use(strategy.initialize());
 app.use(strategy.session());
 
