@@ -45,7 +45,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24, // 24 hour
     httpOnly: true,		
     secure: process.env.NODE_ENV !== "development",
-    sameSite: 'none'
+    sameSite: process.env.NODE_ENV  === 'production' ? 'none' :'lax'
   },
   store: new pgSession({ pool: client })
 }));

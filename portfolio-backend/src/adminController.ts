@@ -102,7 +102,8 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                     console.error('Login error:', err);
                     return res.status(500).json({ message: 'An error occurred during login.', error: err.message });
                 }
-
+const time =  Date.now();
+console.log(time,process.env.NODE_ENV);
                 // Successful login
                 return res.status(200).json({ message: 'Login successful', user: { id: user.id, email: user.email } });
             });
