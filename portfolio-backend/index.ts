@@ -42,10 +42,10 @@ app.use(session({
   resave: false,
   name: "sessionId",
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 hour
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   },
   store: new pgSession({ pool: client })
 }));
