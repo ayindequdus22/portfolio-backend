@@ -260,7 +260,7 @@ const AddProject = (): React.JSX.Element => {
                         required: "Input the link to the project", minLength: {
                             value: 10, message: "Link length must not be less than 10"
                         }, maxLength: {
-                            value: 40, message: "Link length must not be greater than 40"
+                            value: 80, message: "Link length must not be greater than 80"
                         }
                     })
                 }} placeholder='Link' fieldError={errors.link} />
