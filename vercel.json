@@ -1,0 +1,35 @@
+{
+    "version": 2,
+    "projects": {
+      "backend": {
+        "root": "portfolio-backend",
+        "builds": [
+          {
+            "src": "index.ts", 
+            "use": "@vercel/node"
+          }
+        ],
+        "routes": [
+          {
+            "src": "/api/(.*)",
+            "dest": "index.ts"
+          }
+        ]
+      },
+      "admin-web": {
+        "root": "portfolio-admin", 
+        "builds": [
+          {
+            "src": "package.json",
+            "use": "@vercel/static-build"
+          }
+        ],
+        "routes": [
+          {
+            "src": "/(.*)",    
+            "dest": "/"
+          }
+        ]
+      }
+    }
+  }
